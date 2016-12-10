@@ -1,2 +1,2 @@
-# Audio-Pooling-Unity-
-Audio pooling system for Unity
+# Audio-Pooling-Unity
+Audio pooling system for Unity in C#
