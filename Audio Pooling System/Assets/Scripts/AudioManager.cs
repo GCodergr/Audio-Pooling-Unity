@@ -23,8 +23,7 @@ namespace AudioPoolingSystem
 
         public List<AudioClip> audioClipList;   // Holds all the audio clips
 
-
-        internal List<List<AudioClip>> audioClipTable = new List<List<AudioClip>>();
+        private List<List<AudioClip>> audioClipTable = new List<List<AudioClip>>();
         private Vector3 mainCameraPosition;
 
         public GameObject pooledObject;
@@ -43,7 +42,7 @@ namespace AudioPoolingSystem
         }
         #endregion
 
-        #region Initialize Methods
+        #region Initialize
         // Use this for initialization
         void Awake()
         {
@@ -57,7 +56,7 @@ namespace AudioPoolingSystem
             // Here we save our singleton instance
             Instance = this;
 
-            // It is important to calculate the size of the enum have to run this first
+            // First of all calculate the size of the enum
             soundTypeEnumSize = Enum.GetNames(typeof(SoundType)).Length;
 
             AssignAllClipsToAudioClipTable();
@@ -97,7 +96,7 @@ namespace AudioPoolingSystem
         }
         #endregion
 
-        #region Audio Playback Methods
+        #region Audio Playback
         /// <summary>
         /// Returns the audio clip for the requested sound type. If there are
         /// more that one audio clips, we get a random one 
@@ -173,7 +172,7 @@ namespace AudioPoolingSystem
 
         #endregion
 
-        #region Pooling Methods
+        #region Pooling
         /// <summary>
         /// Initializes all the Pooled Objects (Audio Source Elements)
         /// </summary>
@@ -185,7 +184,8 @@ namespace AudioPoolingSystem
             for (int i = 0; i < pooledAmount; i++)
             {
                 GameObject obj = Instantiate(pooledObject) as GameObject;
-                pooledObjectsAudioSource.Add(obj.GetComponent<AudioSource>());
+                // Add the Audio Source components, for faster access  
+                pooledObjectsAudioSource.Add(obj.GetComponent<AudioSource>());  
                 obj.transform.parent = this.transform;
                 obj.SetActive(false);
                 pooledObjects.Add(obj);
@@ -234,6 +234,5 @@ namespace AudioPoolingSystem
             return null;
         }
         #endregion
-
     }
 }
