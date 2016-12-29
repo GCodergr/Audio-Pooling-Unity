@@ -5,24 +5,19 @@ using UnityEngine.UI;
 
 public class Raycast : MonoBehaviour
 {
-    private float raycastRange = 20f;
+    private float raycastRange = 3f;
     private Vector3 rayOrigin;
 
-    private Text notificationText;
+    private Text raycastText;
     private Camera fpsCamera;
 
     void Awake()
     {
-        notificationText = GameObject.Find("Canvas/Notification Text").GetComponent<Text>();
+        raycastText = GameObject.Find("Canvas/Raycast Text").GetComponent<Text>();
         fpsCamera = GetComponent<Camera>();
-
-
     }
 
-    void Start()
-    {
-        StartCoroutine(HideTutorialMessage());
-    }
+
 
     void Update()
     {
@@ -37,19 +32,33 @@ public class Raycast : MonoBehaviour
 
         if (Physics.Raycast(rayOrigin, fpsCamera.transform.forward, out hit, raycastRange))
         {
-            //if (hit.collider.CompareTag)
-            //{
-
-            //}
+            if (hit.collider.CompareTag("Button"))
+            {
+                DisplayButtonMessage(hit.collider.name);
+            }
+            else
+            {
+                ClearButtonMessage();
+            }
+        }
+        else
+        {
+            ClearButtonMessage();
         }
     }
 
-    private IEnumerator HideTutorialMessage()
-    {
-        yield return new WaitForSeconds(2f);
+    #region Raycast Text
 
-        notificationText.text = "";
+
+    private void DisplayButtonMessage(string buttonName)
+    {
+        raycastText.text = "Press (E) to activate " + buttonName + " sound";
     }
-    
+
+    private void ClearButtonMessage()
+    {
+        raycastText.text = "";
+    }       
+    #endregion
 
 }
