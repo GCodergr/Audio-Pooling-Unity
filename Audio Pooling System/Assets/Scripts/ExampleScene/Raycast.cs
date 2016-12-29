@@ -4,27 +4,26 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Raycast : MonoBehaviour
-{
+{   
     private float raycastRange = 3f;
     private Vector3 rayOrigin;
 
     private Text raycastText;
     private Camera fpsCamera;
-
+    
     void Awake()
     {
         raycastText = GameObject.Find("Canvas/Raycast Text").GetComponent<Text>();
         fpsCamera = GetComponent<Camera>();
     }
 
-
-
+    #region Update methods   
     void Update()
     {
-        CheckForButton();
+        RaycastCheck();
     }
 
-    private void CheckForButton()
+    private void RaycastCheck()
     {
         rayOrigin = fpsCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
 
@@ -35,6 +34,8 @@ public class Raycast : MonoBehaviour
             if (hit.collider.CompareTag("Button"))
             {
                 DisplayButtonMessage(hit.collider.name);
+
+                CheckForButtonActivation(hit.collider);         
             }
             else
             {
@@ -47,9 +48,17 @@ public class Raycast : MonoBehaviour
         }
     }
 
+    private void CheckForButtonActivation(Collider hitCollider)
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Button buttonScript = hitCollider.GetComponent<Button>();
+            buttonScript.PlaySound();
+        }
+    }
+    #endregion
+   
     #region Raycast Text
-
-
     private void DisplayButtonMessage(string buttonName)
     {
         raycastText.text = "Press (E) to activate " + buttonName + " sound";
@@ -58,7 +67,6 @@ public class Raycast : MonoBehaviour
     private void ClearButtonMessage()
     {
         raycastText.text = "";
-    }       
+    }
     #endregion
-
 }
