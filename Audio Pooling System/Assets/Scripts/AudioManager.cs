@@ -24,7 +24,6 @@ namespace AudioPoolingSystem
         public List<AudioClip> audioClipList;   // Holds all the audio clips
 
         private List<List<AudioClip>> audioClipTable = new List<List<AudioClip>>();
-        private Vector3 mainCameraPosition;
 
         public GameObject pooledObject;
         public int pooledAmount = 2;
@@ -60,9 +59,6 @@ namespace AudioPoolingSystem
             soundTypeEnumSize = Enum.GetNames(typeof(SoundType)).Length;
 
             AssignAllClipsToAudioClipTable();
-
-            // Set camera reference
-            mainCameraPosition = Camera.main.transform.position;
 
             InitializePooledObjects();
         }
