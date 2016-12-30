@@ -7,9 +7,11 @@ public class Button : MonoBehaviour
 {
     public AudioManager.SoundType sound;
 
+    public Transform speaker;
+
     public void PlaySound()
     {
-        Debug.Log(sound.ToString() +  " is playing");
+        AudioManager.Instance.PlaySound3D(sound, speaker.position);
     }
 
 }
