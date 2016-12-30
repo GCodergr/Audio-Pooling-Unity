@@ -42,7 +42,6 @@ namespace AudioPoolingSystem
         #endregion
 
         #region Initialize
-        // Use this for initialization
         void Awake()
         {
             // First we check if there are any other instances conflicting
@@ -165,7 +164,6 @@ namespace AudioPoolingSystem
             pooledObjectsAudioSource[index].clip = GetAudioClip(soundType);
             pooledObjectsAudioSource[index].Play();
         }
-
         #endregion
 
         #region Pooling

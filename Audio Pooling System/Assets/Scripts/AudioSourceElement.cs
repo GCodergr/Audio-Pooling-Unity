@@ -8,13 +8,11 @@ namespace AudioPoolingSystem
     {
         private AudioSource audioSource;
 
-        // Use this for initialization
         void Awake()
         {
             audioSource = GetComponent<AudioSource>();
         }
 
-        // Update is called once per frame
         void Update()
         {
             // Check if the audio clip has stopped playing
