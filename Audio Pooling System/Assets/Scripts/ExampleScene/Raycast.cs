@@ -1,72 +1,77 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class Raycast : MonoBehaviour
-{   
-    private float raycastRange = 3f;
-    private Vector3 rayOrigin;
-
-    private Text raycastText;
-    private Camera fpsCamera;
-    
-    void Awake()
+namespace ExampleScene
+{
+    public class Raycast : MonoBehaviour
     {
-        raycastText = GameObject.Find("Canvas/Raycast Text").GetComponent<Text>();
-        fpsCamera = GetComponent<Camera>();
-    }
+        private float raycastRange = 3f;
+        private Vector3 rayOrigin;
 
-    #region Update methods   
-    void Update()
-    {
-        RaycastCheck();
-    }
+        private Text raycastText;
+        private Camera fpsCamera;
 
-    private void RaycastCheck()
-    {
-        rayOrigin = fpsCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
-
-        RaycastHit hit;
-
-        if (Physics.Raycast(rayOrigin, fpsCamera.transform.forward, out hit, raycastRange))
+        private void Awake()
         {
-            if (hit.collider.CompareTag("Button"))
-            {
-                DisplayButtonMessage(hit.collider.name);
+            raycastText = GameObject.Find("Canvas/Raycast Text").GetComponent<Text>();
+            fpsCamera = GetComponent<Camera>();
+        }
 
-                CheckForButtonActivation(hit.collider);         
+        #region Update methods   
+
+        private void Update()
+        {
+            RaycastCheck();
+        }
+
+        private void RaycastCheck()
+        {
+            rayOrigin = fpsCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
+
+            RaycastHit hit;
+
+            if (Physics.Raycast(rayOrigin, fpsCamera.transform.forward, out hit, raycastRange))
+            {
+                if (hit.collider.CompareTag("Button"))
+                {
+                    DisplayButtonMessage(hit.collider.name);
+
+                    CheckForButtonActivation(hit.collider);
+                }
+                else
+                {
+                    ClearButtonMessage();
+                }
             }
             else
             {
                 ClearButtonMessage();
             }
         }
-        else
-        {
-            ClearButtonMessage();
-        }
-    }
 
-    private void CheckForButtonActivation(Collider hitCollider)
-    {
-        if (Input.GetKeyDown(KeyCode.E))
+        private void CheckForButtonActivation(Collider hitCollider)
         {
-            Button buttonScript = hitCollider.GetComponent<Button>();
-            buttonScript.PlaySound();
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Button buttonScript = hitCollider.GetComponent<Button>();
+                buttonScript.PlaySound();
+            }
         }
-    }
-    #endregion
-   
-    #region Raycast Text
-    private void DisplayButtonMessage(string buttonName)
-    {
-        raycastText.text = "Press (E) to activate " + buttonName + " sound";
-    }
 
-    private void ClearButtonMessage()
-    {
-        raycastText.text = "";
+        #endregion
+
+        #region Raycast Text
+
+        private void DisplayButtonMessage(string buttonName)
+        {
+            raycastText.text = "Press (E) to activate " + buttonName + " sound";
+        }
+
+        private void ClearButtonMessage()
+        {
+            raycastText.text = "";
+        }
+
+        #endregion
     }
-    #endregion
 }

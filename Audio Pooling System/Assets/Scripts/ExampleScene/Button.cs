@@ -1,16 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using AudioPoolingSystem;
 
-public class Button : MonoBehaviour
+namespace ExampleScene
 {
-    public AudioManager.SoundType sound;
-
-    public Transform speaker;
-
-    public void PlaySound()
+    public class Button : MonoBehaviour
     {
-        AudioManager.Instance.PlaySound3D(sound, speaker.position);
+        public SoundType sound;
+
+        public Transform speaker;
+
+        public void PlaySound()
+        {
+            AudioManager.Instance.PlaySound3D(sound, speaker.position);
+        }
     }
 }

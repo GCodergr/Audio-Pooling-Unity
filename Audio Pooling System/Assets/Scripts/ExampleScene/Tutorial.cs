@@ -1,26 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
-public class Tutorial : MonoBehaviour
+namespace ExampleScene
 {
-    private Text tutorialText;
-
-    void Awake()
+    public class Tutorial : MonoBehaviour
     {
-        tutorialText = GetComponent<Text>();
-    }
+        private Text tutorialText;
 
-    void Start()
-    {
-        StartCoroutine(HideTutorialMessage());
-    }
+        private readonly WaitForSeconds tutorialMessageLifetime = new WaitForSeconds(2f);
 
-    private IEnumerator HideTutorialMessage()
-    {
-        yield return new WaitForSeconds(2f);
+        private void Awake()
+        {
+            tutorialText = GetComponent<Text>();
+        }
 
-        tutorialText.text = "";
+        private void Start()
+        {
+            StartCoroutine(HideTutorialMessage());
+        }
+
+        private IEnumerator HideTutorialMessage()
+        {
+            yield return tutorialMessageLifetime;
+
+            tutorialText.text = "";
+        }
     }
 }

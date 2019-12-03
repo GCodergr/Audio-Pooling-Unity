@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 namespace AudioPoolingSystem
 {
@@ -8,12 +7,12 @@ namespace AudioPoolingSystem
     {
         private AudioSource audioSource;
 
-        void Awake()
+        private void Awake()
         {
             audioSource = GetComponent<AudioSource>();
         }
 
-        void Update()
+        private void Update()
         {
             // Check if the audio clip has stopped playing
             if (!audioSource.isPlaying)

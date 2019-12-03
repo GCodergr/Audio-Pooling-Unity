@@ -1,22 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 namespace AudioPoolingSystem
 {
     public class AudioManager : MonoBehaviour
     {
-        #region Enums
-        public enum SoundType
-        {
-            Switch,
-            ComputerPanel,
-            Trumpet,
-            Exclamation
-        }
-        #endregion
-
         #region Fields
         public List<SoundType> soundTypeList;   // Holds all the sound types
         private int soundTypeEnumSize;
@@ -42,7 +31,8 @@ namespace AudioPoolingSystem
         #endregion
 
         #region Initialize
-        void Awake()
+
+        private void Awake()
         {
             // First we check if there are any other instances conflicting
             if (Instance != null && Instance != this)
@@ -190,7 +180,7 @@ namespace AudioPoolingSystem
         /// Returns the index of the first inactive pooled object
         /// </summary>
         /// <returns>The index of the first inactive pooled object</returns>
-        public int? GetPooledObjectIndex()
+        private int? GetPooledObjectIndex()
         {
             // Parse all pooled objects
             for (int i = 0; i < pooledObjects.Count; i++)
