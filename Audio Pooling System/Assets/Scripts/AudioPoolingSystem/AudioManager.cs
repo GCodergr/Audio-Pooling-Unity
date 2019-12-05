@@ -19,6 +19,8 @@ namespace AudioPoolingSystem
         public bool willGrow = true;
         private List<GameObject> pooledObjects;
         private List<AudioSource> pooledObjectsAudioSource;    // Store the Audio Source component reference for fast access
+
+        private AudioPooler audioPooler;
         #endregion
 
         #region Properties
@@ -44,6 +46,8 @@ namespace AudioPoolingSystem
             // Here we save our singleton instance
             Instance = this;
 
+            audioPooler = FindObjectOfType<AudioPooler>(); 
+            
             // First of all calculate the size of the enum
             soundTypeEnumSize = Enum.GetNames(typeof(SoundType)).Length;
 
