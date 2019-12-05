@@ -18,7 +18,7 @@ namespace AudioPoolingSystem
             if (!audioSource.isPlaying)
             {
                 // Disable this game object
-                this.gameObject.SetActive(false);
+                gameObject.SetActive(false);
             }
         }
     }
