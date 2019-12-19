@@ -6,23 +6,18 @@ namespace AudioPoolingSystem
 {
     public class AudioManager : MonoBehaviour
     {
-        #region Fields
+        // TODO: This is going to be used, instead of the soundTypeList and audioClipList lists 
+        [SerializeField] private AudioEntityCollection audioEntityCollection;
+        
         public List<SoundType> soundTypeList;   // Holds all the sound types
         private int soundTypeEnumSize;
 
         public List<AudioClip> audioClipList;   // Holds all the audio clips
 
         private List<List<AudioClip>> audioClipTable = new List<List<AudioClip>>();
-
-        public GameObject pooledObject;
-        public int pooledAmount = 2;
-        public bool willGrow = true;
-        private List<GameObject> pooledObjects;
-        private List<AudioSource> pooledObjectsAudioSource;    // Store the Audio Source component reference for fast access
-
+        
         private AudioPooler audioPooler;
-        #endregion
-
+        
         #region Properties
         // Static singleton property
         public static AudioManager Instance
@@ -52,8 +47,6 @@ namespace AudioPoolingSystem
             soundTypeEnumSize = Enum.GetNames(typeof(SoundType)).Length;
 
             AssignAllClipsToAudioClipTable();
-
-            InitializePooledObjects();
         }
 
         /// <summary>
@@ -65,7 +58,7 @@ namespace AudioPoolingSystem
             // Iterate through all the enum sound types 
             for (int enumElement = 0; enumElement < soundTypeEnumSize; enumElement++)
             {
-                // Create a temporarily list, that we will add to the audioClipTable in the apropriate position
+                // Create a temporarily list, that we will add to the audioClipTable in the appropriate position
                 List<AudioClip> sublist = new List<AudioClip>();
 
                 // Parse all clips in audio clip list
@@ -91,7 +84,7 @@ namespace AudioPoolingSystem
         /// more that one audio clips, we get a random one 
         /// </summary>
         /// <param name="soundType">The requested sound type</param>
-        /// <returns>The requsted audio clip</returns>
+        /// <returns>The requested audio clip</returns>
         public AudioClip GetAudioClip(SoundType soundType)
         {
             AudioClip wantedAudioClip;
@@ -120,19 +113,11 @@ namespace AudioPoolingSystem
         /// <param name="soundType">The requested sound type</param>
         public void PlaySound2D(SoundType soundType)
         {
-            int? nullableIndex = GetPooledObjectIndex();
+            AudioSourceElement audioSourceElement = audioPooler.GetAvailablePooledObject();
 
-            if (nullableIndex == null)
-            {
-                return;
-            }
-
-            int index = (int)nullableIndex;
-
-            pooledObjects[index].SetActive(true);
-            pooledObjectsAudioSource[index].spatialBlend = 0f;  // 2D
-            pooledObjectsAudioSource[index].clip = GetAudioClip(soundType);
-            pooledObjectsAudioSource[index].Play();
+            if (audioSourceElement == null) return;
+            
+            audioSourceElement.PlayAudio2D(GetAudioClip(soundType));
         }
 
         /// <summary>
@@ -142,84 +127,11 @@ namespace AudioPoolingSystem
         /// <param name="position">World position</param>
         public void PlaySound3D(SoundType soundType, Vector3 position)
         {
-            int? nullableIndex = GetPooledObjectIndex();
+            AudioSourceElement audioSourceElement = audioPooler.GetAvailablePooledObject();
 
-            if (nullableIndex == null)
-            {
-                return;
-            }
+            if (audioSourceElement == null) return;
 
-            int index = (int)nullableIndex;
-
-            pooledObjects[index].SetActive(true);
-            pooledObjects[index].transform.position = position;
-
-            pooledObjectsAudioSource[index].spatialBlend = 1f;  // 3D
-            pooledObjectsAudioSource[index].clip = GetAudioClip(soundType);
-            pooledObjectsAudioSource[index].Play();
-        }
-        #endregion
-
-        #region Pooling
-        /// <summary>
-        /// Initializes all the Pooled Objects (Audio Source Elements)
-        /// </summary>
-        private void InitializePooledObjects()
-        {
-            pooledObjects = new List<GameObject>();
-            pooledObjectsAudioSource = new List<AudioSource>();
-
-            for (int i = 0; i < pooledAmount; i++)
-            {
-                GameObject obj = Instantiate(pooledObject) as GameObject;
-                // Add the Audio Source components, for faster access  
-                pooledObjectsAudioSource.Add(obj.GetComponent<AudioSource>());  
-                obj.transform.parent = this.transform;
-                obj.SetActive(false);
-                pooledObjects.Add(obj);
-            }
-        }
-
-        /// <summary>
-        /// Returns the index of the first inactive pooled object
-        /// </summary>
-        /// <returns>The index of the first inactive pooled object</returns>
-        private int? GetPooledObjectIndex()
-        {
-            // Parse all pooled objects
-            for (int i = 0; i < pooledObjects.Count; i++)
-            {
-                // In case the pooled object is null create an pooled object and return it's index
-                // Note: This actually is not going to be used, because we initialize 
-                // all the pooled objects on Awake method
-                if (pooledObjects[i] == null)
-                {
-                    GameObject obj = Instantiate(pooledObject) as GameObject;
-                    pooledObjectsAudioSource.Add(obj.GetComponent<AudioSource>());
-                    obj.transform.parent = this.transform;
-                    obj.SetActive(false);
-                    pooledObjects[i] = obj;
-                    return i;
-                }
-                // If the object is inactive, return it's index
-                if (!pooledObjects[i].activeInHierarchy)
-                {
-                    return i;
-                }
-            }
-
-            // If the list of the pooledObjects can grow, create a new pooled object and return it's index
-            if (willGrow)
-            {
-                GameObject obj = Instantiate(pooledObject) as GameObject;
-                pooledObjectsAudioSource.Add(obj.GetComponent<AudioSource>());
-                obj.transform.parent = this.transform;
-                pooledObjects.Add(obj);
-                obj.SetActive(false);
-                return (pooledObjects.Count - 1);
-            }
-
-            return null;
+            audioSourceElement.PlayAudio3D(GetAudioClip(soundType), position);
         }
         #endregion
     }

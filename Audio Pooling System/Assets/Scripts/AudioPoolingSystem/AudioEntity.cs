@@ -1,14 +1,12 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+using System;
 
 namespace AudioPoolingSystem
 {
     [Serializable]
-    public class AudioPoolItem
+    public class AudioEntity
     {
         public SoundType soundType;
         public AudioClip audioClip;
-        public int amountToPool;
-        public bool willGrow;
     }
 }

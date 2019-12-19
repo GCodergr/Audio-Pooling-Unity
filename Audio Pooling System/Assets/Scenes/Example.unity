@@ -1235,6 +1235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1ad598a8a294694c8da31bf96a494db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioEntityCollection: {fileID: 0}
   soundTypeList: 0200000002000000010000000100000001000000010000000000000003000000
   audioClipList:
   - {fileID: 8300000, guid: 2667a0a008b044e218b63df62e2be749, type: 3}
@@ -1245,10 +1246,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 89e6bc608da7b47d4914f3d9c2484e48, type: 3}
   - {fileID: 8300000, guid: 81652031b64c342cc8dbc59c138d77c5, type: 3}
   - {fileID: 8300000, guid: 52320e590bf774734a288886eba557ba, type: 3}
-  pooledObject: {fileID: 1000011155429538, guid: 963b6fcec828c434e91dbfc44f76a3ca,
-    type: 3}
-  pooledAmount: 2
-  willGrow: 1
 --- !u!4 &1961662481
 Transform:
   m_ObjectHideFlags: 0
@@ -1275,7 +1272,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1e327f52b004e59aabca342833a5e1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioPoolSO: {fileID: 11400000, guid: fa4c672c08ae9e24ea1dba28d2903690, type: 2}
+  pooledAmount: 2
+  willGrow: 1
+  pooledObjectPrefab: {fileID: 1000011155429538, guid: 963b6fcec828c434e91dbfc44f76a3ca,
+    type: 3}
 --- !u!1001 &1997274187
 PrefabInstance:
   m_ObjectHideFlags: 0
