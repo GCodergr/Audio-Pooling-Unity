@@ -10,10 +10,9 @@ namespace AudioPoolingSystem
         [SerializeField] private AudioEntityCollection audioEntityCollection;
         
         public List<SoundType> soundTypeList;   // Holds all the sound types
-        private int soundTypeEnumSize;
-
         public List<AudioClip> audioClipList;   // Holds all the audio clips
 
+        private int soundTypeEnumSize;
         private List<List<AudioClip>> audioClipTable = new List<List<AudioClip>>();
         
         private AudioPooler audioPooler;
@@ -80,12 +79,11 @@ namespace AudioPoolingSystem
 
         #region Audio Playback
         /// <summary>
-        /// Returns the audio clip for the requested sound type. If there are
-        /// more that one audio clips, we get a random one 
+        /// Returns a random audio clip, given the sound type.
         /// </summary>
         /// <param name="soundType">The requested sound type</param>
         /// <returns>The requested audio clip</returns>
-        public AudioClip GetAudioClip(SoundType soundType)
+        private AudioClip GetRandomAudioClip(SoundType soundType)
         {
             AudioClip wantedAudioClip;
 
@@ -96,12 +94,7 @@ namespace AudioPoolingSystem
             int selectedAudioClipIndex = UnityEngine.Random.Range(0, numberOfClips);
 
             //Debug.Log(numberOfClips);
-
-
-            List<AudioClip> sublist = new List<AudioClip>();
-            // Get all the audio clips based on the sound type 
-            sublist = audioClipTable[tableIndex];
-
+            
             wantedAudioClip = audioClipTable[tableIndex][selectedAudioClipIndex];
 
             return wantedAudioClip;
@@ -117,7 +110,7 @@ namespace AudioPoolingSystem
 
             if (audioSourceElement == null) return;
             
-            audioSourceElement.PlayAudio2D(GetAudioClip(soundType));
+            audioSourceElement.PlayAudio2D(GetRandomAudioClip(soundType));
         }
 
         /// <summary>
@@ -131,7 +124,7 @@ namespace AudioPoolingSystem
 
             if (audioSourceElement == null) return;
 
-            audioSourceElement.PlayAudio3D(GetAudioClip(soundType), position);
+            audioSourceElement.PlayAudio3D(GetRandomAudioClip(soundType), position);
         }
         #endregion
     }

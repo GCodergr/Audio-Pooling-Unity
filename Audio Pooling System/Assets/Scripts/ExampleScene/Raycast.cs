@@ -64,7 +64,7 @@ namespace ExampleScene
 
         private void DisplayButtonMessage(string buttonName)
         {
-            raycastText.text = "Press (E) to activate " + buttonName + " sound";
+            raycastText.text = $"Press (E) to activate {buttonName} sound";
         }
 
         private void ClearButtonMessage()
