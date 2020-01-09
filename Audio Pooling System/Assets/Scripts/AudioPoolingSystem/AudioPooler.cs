@@ -32,14 +32,20 @@ namespace AudioPoolingSystem
             
             for (int i = 0; i < pooledAmount; i++)
             {
-                GameObject obj = Instantiate(pooledObjectPrefab);
-                
-                // Add the Audio Source components, for faster access  
-                audioSourceElements.Add(obj.GetComponent<AudioSourceElement>());  
-                obj.transform.parent = gameObject.transform;
-                obj.SetActive(false);
-                pooledObjects.Add(obj);
+                InstantiatePooledObject();
             }
+        }
+
+        private AudioSourceElement InstantiatePooledObject()
+        {
+            GameObject obj = Instantiate(pooledObjectPrefab, gameObject.transform);
+
+            var audioSourceElement = obj.GetComponent<AudioSourceElement>();
+            audioSourceElements.Add(audioSourceElement); // Cache the Audio Source Element
+            obj.SetActive(false);
+            pooledObjects.Add(obj);
+
+            return audioSourceElement;
         }
 
         /// <summary>
@@ -56,9 +62,13 @@ namespace AudioPoolingSystem
                     return audioSourceElements[i];
                 }
             }
-
-            // TODO: Add the grow mechanism
-
+            
+            // If the pooler can grow, create a new pooled object
+            if (willGrow)
+            {
+                return InstantiatePooledObject();
+            }            
+            
             return null;
         }
     }

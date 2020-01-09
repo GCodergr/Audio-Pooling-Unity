@@ -2,7 +2,7 @@
 
 namespace AudioPoolingSystem
 {
-    [CreateAssetMenu(fileName = "audioEntityCollection", menuName = "AudioPooler/EntityCollection", order = 1)]
+    [CreateAssetMenu(fileName = "AudioEntityCollection", menuName = "AudioPooler/EntityCollection", order = 1)]
     public class AudioEntityCollection : ScriptableObject
     {
         public AudioEntity[] audioEntities;
