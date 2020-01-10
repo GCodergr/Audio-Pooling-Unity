@@ -1,30 +1,24 @@
 ﻿using UnityEngine;
-using System;
 using System.Collections.Generic;
 
 namespace AudioPoolingSystem
 {
     public class AudioManager : MonoBehaviour
     {
-        // TODO: This is going to be used, instead of the soundTypeList and audioClipList lists 
-        [SerializeField] private AudioEntityCollection audioEntityCollection;
+        [SerializeField] 
+        private AudioEntityCollection audioEntityCollection;
         
-        public List<SoundType> soundTypeList;   // Holds all the sound types
-        public List<AudioClip> audioClipList;   // Holds all the audio clips
-
-        private int soundTypeEnumSize;
-        private List<List<AudioClip>> audioClipTable = new List<List<AudioClip>>();
+        private Dictionary<SoundType, List<AudioClip>> audioClipsBySoundType = new Dictionary<SoundType, List<AudioClip>>();
         
         private AudioPooler audioPooler;
         
-        #region Properties
         // Static singleton property
         public static AudioManager Instance
         {
             get;
             private set;
         }
-        #endregion
+        
 
         #region Initialize
 
@@ -42,39 +36,40 @@ namespace AudioPoolingSystem
 
             audioPooler = FindObjectOfType<AudioPooler>(); 
             
-            // First of all calculate the size of the enum
-            soundTypeEnumSize = Enum.GetNames(typeof(SoundType)).Length;
-
-            AssignAllClipsToAudioClipTable();
+            MapAudioClipsToSoundType();
         }
 
         /// <summary>
-        /// Assigns all audio clips to the Audio Clip Table based on two lists:
-        /// 1) The Sound Type List and 2) The Audio Clip List 
+        /// Maps all audio clips to their sound type 
         /// </summary>
-        private void AssignAllClipsToAudioClipTable()
+        private void MapAudioClipsToSoundType()
         {
-            // Iterate through all the enum sound types 
-            for (int enumElement = 0; enumElement < soundTypeEnumSize; enumElement++)
+            // Iterate through all the audio entities 
+            for (int i = 0; i < audioEntityCollection.audioEntities.Length; i++)
             {
-                // Create a temporarily list, that we will add to the audioClipTable in the appropriate position
-                List<AudioClip> sublist = new List<AudioClip>();
-
-                // Parse all clips in audio clip list
-                for (int i = 0; i < audioClipList.Count; i++)
-                {
-                    // Check if the audio clip that we parse has the sound type we want
-                    if (soundTypeList[i] == (SoundType)enumElement)
-                    {
-                        // If the audio clip belongs to the sound type we want, add it to the temporarily list
-                        sublist.Add(audioClipList[i]);
-                    }
-                }
-
-                // Finally we have to add the sublist to the audioClipTable
-                audioClipTable.Add(sublist);
+                AddAudioClipToDictionary(audioEntityCollection.audioEntities[i].soundType,
+                                         audioEntityCollection.audioEntities[i].audioClip);
             }
         }
+
+        private void AddAudioClipToDictionary(SoundType soundType, AudioClip audioClip)
+        {
+            if (audioClipsBySoundType.ContainsKey(soundType))
+            {
+                List<AudioClip> audioClips = audioClipsBySoundType[soundType];
+                if (audioClips.Contains(audioClip) == false)
+                {
+                    audioClips.Add(audioClip);
+                }
+            }
+            else
+            {
+                List<AudioClip> audioClips = new List<AudioClip>();
+                audioClips.Add(audioClip);
+                audioClipsBySoundType.Add(soundType, audioClips);
+            }
+        }
+        
         #endregion
 
         #region Audio Playback
@@ -85,19 +80,16 @@ namespace AudioPoolingSystem
         /// <returns>The requested audio clip</returns>
         private AudioClip GetRandomAudioClip(SoundType soundType)
         {
-            AudioClip wantedAudioClip;
-
-            int tableIndex = (int)soundType;
-
-            int numberOfClips = audioClipTable[tableIndex].Count;
-
-            int selectedAudioClipIndex = UnityEngine.Random.Range(0, numberOfClips);
-
-            //Debug.Log(numberOfClips);
+            AudioClip requestedAudioClip = null;
             
-            wantedAudioClip = audioClipTable[tableIndex][selectedAudioClipIndex];
-
-            return wantedAudioClip;
+            if (audioClipsBySoundType.TryGetValue(soundType, out List<AudioClip> audioClips))
+            {
+                int selectedAudioClipIndex = Random.Range(0, audioClips.Count);
+                
+                requestedAudioClip = audioClips[selectedAudioClipIndex];
+            }
+            
+            return requestedAudioClip;
         }
 
         /// <summary>

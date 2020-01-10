@@ -6,14 +6,12 @@ namespace AudioPoolingSystem
     public class AudioPooler : MonoBehaviour
     {
         [SerializeField]
+        private GameObject pooledObjectPrefab;
+        [SerializeField]
         private int pooledAmount = 2;
-        
         [SerializeField]
         private bool willGrow = true;
-           
-        [SerializeField]
-        private GameObject pooledObjectPrefab;
-
+        
         private List<GameObject> pooledObjects;
         private List<AudioSourceElement> audioSourceElements;
         
