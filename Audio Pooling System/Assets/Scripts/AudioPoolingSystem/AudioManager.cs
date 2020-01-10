@@ -8,7 +8,7 @@ namespace AudioPoolingSystem
         [SerializeField] 
         private AudioEntityCollection audioEntityCollection;
         
-        private Dictionary<SoundType, List<AudioClip>> audioClipsBySoundType = new Dictionary<SoundType, List<AudioClip>>();
+        private Dictionary<SoundType, List<AudioClip>> audioClipsBySoundType = new Dictionary<SoundType, List<AudioClip>>(new SoundTypeComparer());
         
         private AudioPooler audioPooler;
         
@@ -19,7 +19,6 @@ namespace AudioPoolingSystem
             private set;
         }
         
-
         #region Initialize
 
         private void Awake()
